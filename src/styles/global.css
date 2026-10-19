@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Halagar";
+  src: url("/font/halagar/Halagar%20Demo.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --tabasco-red: #F40000;
+  --haya-crimson: #942024;
+  --haya-navy: #101c32;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: "Overpass", system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+.font-baton {
+  font-family: "Halagar", "Antonio", serif;
+  font-weight: 800;
+}
+
+h2 {
+  font-family: "League Spartan", "Overpass", sans-serif;
+  font-weight: 400;
+}
+
+p,
+.font-overpass {
+  font-family: "Overpass", sans-serif;
+}
+
+/* Custom scrollbar for the icon-started text box on smaller viewports */
+[data-lenis-prevent]::-webkit-scrollbar {
+  width: 4px;
+}
+[data-lenis-prevent]::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.06);
+}
+[data-lenis-prevent]::-webkit-scrollbar-thumb {
+  background: #F40000;
+}

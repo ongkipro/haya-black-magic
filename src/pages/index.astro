@@ -1,0 +1,574 @@
+---
+import "../styles/global.css";
+
+const pageTitle = "Black Magic Coffee - Haya Espresso Bar Signature di Malang";
+const pageDescription =
+  "Experience Black Magic at Haya Espresso Bar Sawojajar Malang: a 92°C 1:1.5 double ristretto folded into 60°C silky microfoam in a 160ml ceramic cup.";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href="https://hayaespressobar.com/black-magic" />
+    <link rel="icon" type="image/webp" href="/images/haya-monogram.webp" />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/magic-real.webp" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Antonio:wght@400..700&family=League+Spartan:wght@300..900&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- 1. Virtual Scroll Spacer (Matches MJ in tabasco_pretty.js: 10 * 80vh = 800vh desktop, 600vh mobile) -->
+    <div
+      id="scroll-spacer"
+      style="height: 800vh; width: 100%; position: absolute; top: 0; left: 0; pointer-events: none; z-index: -1;"
+    >
+    </div>
+
+    <!-- 2. Fixed 3D Stage Container (Matches xJ in tabasco_pretty.js) -->
+    <div class="fixed inset-0 w-full h-full z-0">
+      <!-- Dynamic Background Layer (Dark Studio -> Crimson Glow -> Pure White) -->
+      <div
+        id="stage-bg"
+        class="absolute inset-0 pointer-events-none z-[-1]"
+        style="background: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #000000 100%);"
+      >
+      </div>
+
+      <!-- HTML Background Portal for Phase 5 ("92°C" behind the 3D rolling barrel, exact Tabasco portal mechanic) -->
+      <div id="html-background-portal" class="absolute inset-0 pointer-events-none z-0">
+        <section
+          class="absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-center text-center pointer-events-none"
+        >
+          <div
+            class="relative text-white flex flex-col items-center justify-center w-full h-full max-w-5xl mx-auto"
+          >
+            <h2
+              class="font-baton text-[7vw] md:text-[clamp(24px,3.5vw,48px)] leading-[1] uppercase font-black tracking-tighter m-0 text-center"
+              style="visibility: hidden;"
+            >
+              THE ARCHITECT OF FLAVOR:
+            </h2>
+            <h1
+              class="anim-target font-baton text-[30vw] md:text-[clamp(100px,20vw,250px)] leading-[0.8] uppercase font-black tracking-wide m-0 text-center mb-6 md:mb-12 text-white drop-shadow-[0_0_80px_rgba(150,0,0,0.8)]"
+              style="opacity: 0;"
+            >
+              92°C
+            </h1>
+            <div
+              class="flex flex-col items-center w-full max-w-[95%] md:max-w-2xl"
+              style="visibility: hidden;"
+            >
+              <div class="w-20 md:w-32 h-[1px] mb-6 md:mb-10"></div>
+              <p class="font-overpass text-base md:text-[1.25rem] leading-relaxed text-center">
+                While most cappuccinos push past 28 seconds into harsh bitterness, Black Magic locks
+                our Hambach PID at 92°C and cuts the double ristretto at 36 grams.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Full-Viewport Three.js WebGL Canvas -->
+      <canvas id="webgl-canvas" class="relative z-10 w-full h-full block"></canvas>
+
+      <!-- Tabasco-Style Loader Screen (Matches rJ in tabasco_pretty.js) -->
+      <div
+        id="loader-screen"
+        class="fixed inset-0 z-[50] flex items-center justify-center overflow-hidden"
+        style="background: radial-gradient(circle at center, #2a0808 0%, #0a0a0a 100%);"
+      >
+        <h1
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-bold text-white opacity-[0.02] pointer-events-none select-none m-0 leading-none whitespace-nowrap"
+        >
+          BLACK MAGIC
+        </h1>
+        <div class="relative z-10 w-[350px] max-w-full px-6 sm:px-0">
+          <div class="flex justify-between items-end mb-3">
+            <span
+              id="loader-step"
+              class="text-white/60 text-xs tracking-widest uppercase font-overpass"
+            >
+              SELECTING FLORES BAJAWA...
+            </span>
+            <span id="loader-pct" class="text-white font-light text-sm font-overpass">0%</span>
+          </div>
+          <div class="w-full h-[1px] bg-white/10 overflow-hidden">
+            <div
+              id="loader-bar"
+              class="h-full bg-[#cc1414] transition-all duration-300 ease-out"
+              style="width: 0%;"
+            >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Fixed Scrollytelling Overlay Stage (Matches SJ in tabasco_pretty.js) -->
+    <main class="fixed inset-0 z-30 w-full h-full pointer-events-none select-none">
+      <!-- Top-Left Fixed Brand Wordmark (Inverts automatically with background phase) -->
+      <a
+        id="hud-logo"
+        href="#top"
+        class="fixed top-[max(1.25rem,env(safe-area-inset-top))] left-[max(1.25rem,env(safe-area-inset-left))] md:top-14 md:left-14 z-[100] pointer-events-auto flex items-center gap-2.5 md:gap-3 text-white mix-blend-difference transition-colors duration-700 ease-in-out no-underline"
+      >
+        <img
+          src="/images/haya-monogram.webp"
+          alt="Haya Espresso Bar monogram emblem"
+          width="36"
+          height="36"
+          class="w-7 h-7 md:w-10 md:h-10 rounded-full object-cover bg-[#10203b] border border-current/25 shadow-sm"
+        />
+        <div class="flex flex-col leading-none">
+          <span class="font-baton text-lg md:text-2xl tracking-[0.16em] uppercase">HAYA</span>
+          <span class="font-overpass text-[0.52rem] md:text-[0.68rem] tracking-[0.22em] uppercase opacity-75">
+            BLACK MAGIC · 160ML
+          </span>
+        </div>
+      </a>
+
+      <!-- Top-Right Fixed Action: Watch Real 25s Extraction Film from Google Drive -->
+      <button
+        id="hud-film-btn"
+        type="button"
+        data-open-film
+        class="fixed top-[max(1.25rem,env(safe-area-inset-top))] right-[max(1.25rem,env(safe-area-inset-right))] md:top-14 md:right-14 z-[100] pointer-events-auto flex items-center gap-2 px-2.5 py-1.5 md:px-3.5 md:py-2 rounded-full border border-white/25 bg-black/35 backdrop-blur-md text-white font-overpass text-[0.58rem] md:text-xs tracking-[0.14em] md:tracking-[0.18em] uppercase transition-all duration-300 hover:bg-[#F40000] hover:border-[#F40000] hover:text-white cursor-pointer"
+      >
+        <span class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#F40000] animate-pulse"></span>
+        <span>25s BREW FILM</span>
+      </button>
+
+      <!-- Bottom-Right Fixed Credit / Bar Location (Matches Tabasco's bottom-right link) -->
+      <a
+        id="hud-credit"
+        href="https://maps.google.com/?q=Haya+Espresso+Bar+Jl.+Danau+Maninjau+Raya+No.89+Sawojajar+Malang"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fixed bottom-[max(0.9rem,env(safe-area-inset-bottom))] right-[max(0.9rem,env(safe-area-inset-right))] z-[100] font-overpass text-[0.62rem] md:text-xs tracking-wide text-white mix-blend-difference opacity-70 hover:opacity-100 transition-opacity pointer-events-auto"
+      >
+        Crafted slowly at <span class="font-semibold">Haya Espresso Bar · Sawojajar, Malang</span>
+      </a>
+
+      <!-- 9 Overlapping Phase Sections (Exact u2 array from tabasco_pretty.js) -->
+      <div class="fixed inset-0 h-[100dvh] w-full">
+        <!-- PHASE 0: origin (variant: custom-origin, endTime: 0.1) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-end text-left max-md:justify-end max-md:pb-[5vh] max-md:px-[4vw]"
+          style="opacity: 1; visibility: visible;"
+        >
+          <div
+            class="origin-inner relative z-20 max-w-lg lg:max-w-xl text-white mix-blend-difference flex flex-col items-center md:items-start mt-10 md:mt-0 pt-0 md:pt-0"
+            style="opacity: 0;"
+          >
+            <h1
+              class="font-baton text-[clamp(30px,9vw,80px)] md:text-[clamp(40px,6.5vw,80px)] leading-[0.9] uppercase font-black tracking-tighter m-0 flex flex-col items-center md:items-start mb-3 md:mb-8 text-center md:text-left"
+            >
+              <span class="anim-target block">THE ROOT OF</span>
+              <div class="anim-target flex flex-row items-baseline mt-1 md:mt-2">
+                <span class="block px-1 md:pr-2 md:pl-0">BLACK</span>
+                <span
+                  class="block bg-[#F40000] px-2 md:px-4 pt-1 pb-0 -mr-1 md:-ml-1 md:mr-0"
+                >
+                  MAGIC
+                </span>
+              </div>
+            </h1>
+            <h2
+              class="anim-target font-overpass text-[1.1rem] md:text-4xl font-normal mb-3 md:mb-6 text-center md:text-left"
+            >
+              Sweetness begins in calibration
+            </h2>
+            <div class="anim-target w-20 md:w-56 h-[2px] bg-white mb-4 md:mb-8 opacity-80"></div>
+            <p
+              class="anim-target font-overpass text-[0.85rem] md:text-xl leading-relaxed font-light opacity-90 text-center md:text-left max-w-[90vw] md:max-w-none"
+            >
+              At Haya Espresso Bar in Sawojajar, Malang, we saw potential where others added sugar.
+              By pairing a 92°C double ristretto with 60°C freeze-distilled milk inside a 160ml
+              navy ceramic cup, we weren't just making a cappuccino; we were designing our daily
+              signature. This is the story of how one cup became Haya's standard of excellence.
+            </p>
+          </div>
+        </section>
+
+        <!-- PHASE 1: selection (variant: custom-selection, startTime: 0.1, endTime: 1.1) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-start text-left md:pl-[5vw] max-md:justify-end max-md:pb-[5vh] max-md:px-[4vw]"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-20 max-w-lg lg:max-w-xl text-white mix-blend-difference flex flex-col items-center md:items-start mt-10 md:mt-0 pt-0 md:pt-0 w-full md:w-auto text-center md:text-left"
+          >
+            <h1
+              class="font-baton text-[clamp(32px,10vw,80px)] md:text-[clamp(40px,6.5vw,80px)] leading-[0.9] uppercase font-black tracking-tighter m-0 flex flex-col items-center md:items-start mb-3 md:mb-8 text-center md:text-left"
+            >
+              <span class="anim-target block">THE</span>
+              <div class="anim-target flex flex-row items-baseline mt-1 md:mt-2">
+                <span class="block pr-1">STAND</span>
+                <span class="block bg-[#F40000] px-2 md:px-3 pt-1 pb-0">ARD</span>
+              </div>
+            </h1>
+            <div class="anim-target w-20 md:w-56 h-[2px] bg-white mb-4 md:mb-8 opacity-80"></div>
+            <p
+              class="anim-target font-overpass text-[0.85rem] md:text-xl leading-relaxed font-light opacity-90 text-center md:text-left max-w-[90vw] md:max-w-none"
+            >
+              This is where integrity is measured. Every morning at Haya, extraction is a ritual of
+              precision, not a race. High-altitude Flores Bajawa Arabica (1,200–1,800 MASL) is
+              dosed to 18.0 grams in 2.45 seconds on our Maquinos grinder and leveled with a Vesper
+              distributor. We don't just brew; we calibrate.
+            </p>
+          </div>
+        </section>
+
+        <!-- PHASE 2: space-transition-1 (variant: ready-evolve, startTime: 1.1, endTime: 1.8) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-end items-start text-left pl-[5vw] pb-[10vh] max-md:justify-end max-md:items-start max-md:text-left max-md:pl-[5vw] max-md:pb-[10vh]"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-20 max-w-4xl text-white mix-blend-difference flex flex-col items-start w-full mt-20 md:mt-0"
+          >
+            <h1
+              class="anim-target font-baton text-[clamp(28px,8vw,100px)] md:text-[clamp(50px,8vw,100px)] leading-[0.9] uppercase font-black tracking-tighter m-0 md:whitespace-nowrap"
+            >
+              CUT AT 1:1.5...
+            </h1>
+          </div>
+        </section>
+
+        <!-- PHASE 3: space-transition-2 (variant: minimal, startTime: 1.8, endTime: 2.5) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 md:p-20 justify-center items-center max-md:hidden"
+          style="opacity: 0; visibility: hidden;"
+        >
+        </section>
+
+        <!-- PHASE 4: three-ingredients (variant: three-ingredients, startTime: 2.8, endTime: 3.4) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-center text-center"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div class="relative z-20 text-white flex flex-col items-center justify-center w-full h-full">
+            <h1
+              class="anim-target font-baton text-[clamp(36px,12vw,80px)] md:text-[clamp(40px,6.5vw,80px)] leading-[0.9] uppercase font-black tracking-tighter m-0 flex flex-col md:flex-row items-center mb-6 md:mb-8 text-center"
+            >
+              <span
+                class="bg-[#F40000] text-white px-3 md:px-4 pt-1 pb-0 mb-2 md:mb-0 mr-0 md:mr-4"
+              >
+                THREE
+              </span>
+              <span>ELEMENTS</span>
+            </h1>
+            <p
+              class="anim-target font-overpass text-xl md:text-3xl leading-relaxed font-normal mb-8 md:mb-16 text-center opacity-95"
+            >
+              18g Flores Bajawa + 92°C Double Ristretto + 60°C Silky Microfoam
+            </p>
+            <p
+              class="anim-target font-overpass text-base md:text-xl leading-relaxed opacity-60 text-center font-light whitespace-pre-line tracking-wide mt-4 md:mt-8"
+            >
+              {"Because, if you have the essence,\nyou don't need the sugar"}
+            </p>
+          </div>
+        </section>
+
+        <!-- PHASE 5: architect (variant: architect, startTime: 3.4, endTime: 5.0) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-center text-center"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-50 text-white flex flex-col items-center justify-center w-full h-full max-w-5xl mx-auto"
+          >
+            <h2
+              class="anim-target font-baton text-[clamp(20px,7vw,48px)] md:text-[clamp(24px,3.5vw,48px)] leading-[1] uppercase font-black tracking-tighter m-0 text-center"
+            >
+              THE ARCHITECT OF FLAVOR:
+            </h2>
+            <h1
+              class="anim-target font-baton text-[clamp(72px,30vw,250px)] md:text-[clamp(100px,20vw,250px)] leading-[0.8] uppercase font-black tracking-wide m-0 text-center mb-6 md:mb-12"
+              style="-webkit-text-stroke: 3px white; color: transparent;"
+            >
+              92°C
+            </h1>
+            <div class="anim-target flex flex-col items-center w-full max-w-[95%] md:max-w-2xl">
+              <div class="w-20 md:w-32 h-[1px] bg-white/40 mb-6 md:mb-10"></div>
+              <p
+                class="font-overpass text-base md:text-[1.25rem] leading-relaxed text-center font-light text-white/85"
+              >
+                While most cappuccinos push past 28 seconds into harsh bitterness, Black Magic
+                locks our Hambach PID at <strong class="font-black text-white">92°C and 1:1.5</strong>.
+                Stopping the extraction at exactly 36 grams preserves roasted hazelnut and dark
+                chocolate sweetness.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- PHASE 6: patience-new (variant: patience-new, startTime: 5.0, endTime: 5.8) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-center items-center text-center"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-20 text-black flex flex-col items-center justify-center w-full h-full max-w-xl mx-auto"
+          >
+            <h2
+              class="anim-target font-overpass text-2xl md:text-4xl leading-relaxed mb-2 font-medium text-center"
+            >
+              And finally...
+            </h2>
+            <h1
+              class="anim-target font-overpass text-3xl md:text-5xl leading-tight font-medium text-center"
+            >
+              Calibration becomes Black Magic
+            </h1>
+          </div>
+        </section>
+
+        <!-- PHASE 7: icon-started (variant: icon-started, startTime: 6.0, endTime: 7.0) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-between items-center text-left flex-row max-md:justify-center max-md:items-center max-md:text-left max-md:flex-col"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-20 text-black flex flex-col sm:flex-row items-center justify-between w-full h-full max-w-[95vw] sm:max-w-[90vw] mx-auto gap-2 sm:gap-10 md:gap-20"
+          >
+            <!-- Left Column -->
+            <div
+              class="flex-none sm:flex-1 flex flex-col items-center sm:items-start text-center sm:text-left mt-10 sm:mt-0 sm:max-w-[26vw]"
+            >
+              <h1
+                class="anim-target font-baton text-[clamp(36px,11vw,100px)] sm:text-[clamp(40px,6.5vw,92px)] md:text-[clamp(46px,7vw,94px)] leading-[0.85] uppercase font-black tracking-tighter m-0 mb-2 sm:mb-6 w-full"
+              >
+                ONE <span class="bg-[#F40000] text-white px-3 pb-1">CUP</span><br />STARTED IT...
+              </h1>
+              <div class="anim-target w-24 sm:w-44 h-1.5 sm:h-3 bg-[#F40000] mb-2 sm:mb-6"></div>
+              <h2
+                class="anim-target font-overpass text-[1.15rem] sm:text-[1.4rem] md:text-[1.85rem] leading-snug font-medium sm:font-normal text-[#1a1a1a] max-w-[16ch]"
+              >
+                A sweeter way to meet coffee at Haya
+              </h2>
+            </div>
+
+            <!-- Center Column (Open Space for the 3D 160ml Black Magic Cup) -->
+            <div class="hidden sm:block sm:flex-[1.75]"></div>
+
+            <!-- Right Column (Red Left-Bordered Narrative & Specs) -->
+            <div
+              class="flex-none sm:flex-1 flex flex-col items-start text-left max-w-md mx-auto sm:max-w-none sm:mx-0 w-full max-sm:mb-4"
+            >
+              <div
+                data-lenis-prevent="true"
+                class="anim-target font-overpass text-sm sm:text-base md:text-xl leading-relaxed font-normal text-[#1a1a1a] whitespace-pre-line tracking-wide border-l-2 border-[#F40000] pl-4 md:pl-6 max-sm:bg-white/92 max-sm:backdrop-blur-md max-sm:py-2.5 max-sm:pr-3 max-sm:rounded-r-lg max-sm:text-[12.5px] max-sm:leading-[1.36] max-h-[45vh] sm:max-h-[60vh] md:max-h-none overflow-y-auto md:overflow-visible overscroll-contain pointer-events-auto"
+              >
+                {
+                  "The cup that defines Haya Espresso Bar. A concentrated 1:1.5 double ristretto (36g yield from 18g Flores Bajawa) folded into 130ml of 60°C silky microfoam inside our preheated 160ml midnight-navy ceramic cup.\n\nToday we brew a limited number — each peg on our wooden board is a cup. From the first calibration at 08:00 WIB to the last evening pour at Jl. Danau Maninjau Raya No.89, Sawojajar, Black Magic delivers dense chocolate crema and natural lactose sweetness with zero added sugar."
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PHASE 8: evolution (variant: evolution, startTime: 7.0) -->
+        <section
+          class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] md:p-20 justify-between items-center flex-col"
+          style="opacity: 0; visibility: hidden;"
+        >
+          <div
+            class="relative z-20 text-black flex flex-col items-center justify-between w-full h-full pt-16 md:pt-2"
+          >
+            <p
+              class="anim-target font-overpass text-[0.6rem] md:text-[0.75rem] uppercase tracking-[0.35em] text-black/45 font-medium text-center w-full"
+            >
+              18g Flores Bajawa · 92°C Double Ristretto · 160ml Navy Ceramic
+            </p>
+            <h1
+              class="anim-target font-baton text-[clamp(36px,12vw,85px)] md:text-[clamp(45px,7vw,85px)] leading-[0.8] uppercase font-black tracking-tighter m-0 text-center w-full"
+            >
+              FOUR STAGES OF PRECISION
+            </h1>
+
+            <!-- Center 3D Lineup Space + Interactive Visit & Video Strip -->
+            <div class="flex-1 flex flex-col items-center justify-end pb-3 md:pb-6 w-full">
+              <div
+                class="anim-target pointer-events-auto flex flex-wrap items-center justify-center gap-2.5 md:gap-4 bg-white/85 backdrop-blur-md border border-black/10 px-4 py-2.5 md:px-6 md:py-3 rounded-full shadow-lg"
+              >
+                <span class="font-overpass text-xs md:text-sm font-semibold text-[#111111]">
+                  IDR 45.000 · 160ml Hot Ceramic
+                </span>
+                <span class="hidden sm:inline text-black/25">|</span>
+                <button
+                  type="button"
+                  data-open-film
+                  class="font-overpass text-xs md:text-sm font-semibold text-[#F40000] hover:underline cursor-pointer"
+                >
+                  Play 25s Extraction Film
+                </button>
+                <span class="hidden sm:inline text-black/25">|</span>
+                <a
+                  href="https://maps.google.com/?q=Haya+Espresso+Bar+Jl.+Danau+Maninjau+Raya+No.89+Sawojajar+Malang"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-overpass text-xs md:text-sm font-medium text-black/80 hover:text-black underline"
+                >
+                  Sawojajar, Malang (08:00–22:00)
+                </a>
+                <span class="hidden sm:inline text-black/25">|</span>
+                <a
+                  href="https://wa.me/6281234567890?text=Halo%20Haya%20Espresso%20Bar%2C%20saya%20ingin%20tanya%20ketersediaan%20Black%20Magic%20hari%20ini."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-overpass text-xs md:text-sm font-medium text-black/75 hover:text-black px-3 py-1 rounded-full border border-black/20 transition-colors"
+                >
+                  Ask Barista (WhatsApp)
+                </a>
+              </div>
+            </div>
+
+            <h1
+              class="anim-target font-baton text-[clamp(40px,14vw,100px)] md:text-[clamp(50px,8vw,100px)] leading-[0.8] uppercase font-black tracking-tighter m-0 text-center w-full mb-10 md:-mb-10"
+            >
+              MEET <span class="bg-[#F40000] text-white px-3 pb-1">BLACK MAGIC</span>
+            </h1>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- 4. Full HD 25-Second Black Magic Extraction Film Modal (Magic HAYA.mov from Google Drive) -->
+    <div
+      id="film-modal"
+      class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-xl p-4 md:p-10"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Haya Black Magic 25-Second Extraction Film"
+    >
+      <div class="relative w-full max-w-5xl bg-[#0e0a08] border border-white/15 rounded-lg overflow-hidden shadow-2xl">
+        <div class="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#F40000]"></span>
+            <span class="font-overpass text-xs md:text-sm tracking-[0.2em] uppercase text-white/90">
+              MAGIC HAYA.MOV — 05_05_26 FULL EXTRACTION REEL (92°C · 2.45S · 1:1.5 · 160ML)
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              data-film-src="/videos/magic-full.mp4"
+              class="px-2.5 py-1 text-[0.68rem] uppercase tracking-widest font-overpass bg-[#F40000] text-white rounded cursor-pointer"
+            >
+              FULL 25S REEL
+            </button>
+            <button
+              id="close-film-btn"
+              type="button"
+              class="px-3 py-1 text-xs uppercase tracking-widest font-overpass text-white/70 hover:text-white border border-white/20 rounded cursor-pointer"
+            >
+              CLOSE [ESC]
+            </button>
+          </div>
+        </div>
+        <div class="relative aspect-video w-full bg-black">
+          <video
+            id="film-video"
+            class="w-full h-full object-contain"
+            controls
+            playsinline
+            preload="metadata"
+            poster="/images/frames/frame-19.webp"
+          >
+            <source src="/videos/magic-full.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-4 bg-[#140e0b] border-t border-white/10">
+          <button
+            type="button"
+            data-film-src="/videos/stages/stage-02-grind.mp4"
+            class="flex items-center gap-2.5 text-left p-1.5 rounded hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <img
+              src="/images/frames/frame-08.webp"
+              alt="Maquinos grinder set to 2.4 seconds for 18g Black Magic dose"
+              width="64"
+              height="36"
+              class="w-14 h-9 object-cover rounded border border-white/15"
+            />
+            <div class="text-[0.7rem] font-overpass leading-tight">
+              <div class="text-[#F40000] font-bold">01 · 2.45S GRIND</div>
+              <div class="text-white/70">18g Flores Bajawa</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            data-film-src="/videos/stages/stage-03-pid92c.mp4"
+            class="flex items-center gap-2.5 text-left p-1.5 rounded hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <img
+              src="/images/frames/frame-10.webp"
+              alt="Hambach espresso machine grouphead locked at 92 degrees Celsius"
+              width="64"
+              height="36"
+              class="w-14 h-9 object-cover rounded border border-white/15"
+            />
+            <div class="text-[0.7rem] font-overpass leading-tight">
+              <div class="text-[#F40000] font-bold">02 · 92°C PID</div>
+              <div class="text-white/70">9 Bar Hambach Lock</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            data-film-src="/videos/stages/stage-04-ristretto.mp4"
+            class="flex items-center gap-2.5 text-left p-1.5 rounded hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <img
+              src="/images/frames/frame-12.webp"
+              alt="Double ristretto streams pouring into navy ceramic cup"
+              width="64"
+              height="36"
+              class="w-14 h-9 object-cover rounded border border-white/15"
+            />
+            <div class="text-[0.7rem] font-overpass leading-tight">
+              <div class="text-[#F40000] font-bold">03 · 1:1.5 CUT</div>
+              <div class="text-white/70">36g Ristretto Heart</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            data-film-src="/videos/stages/stage-05-tulip.mp4"
+            class="flex items-center gap-2.5 text-left p-1.5 rounded hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            <img
+              src="/images/frames/frame-21.webp"
+              alt="Finished 160ml Black Magic cup with tulip latte art on navy saucer"
+              width="64"
+              height="36"
+              class="w-14 h-9 object-cover rounded border border-white/15"
+            />
+            <div class="text-[0.7rem] font-overpass leading-tight">
+              <div class="text-[#F40000] font-bold">04 · 160ML CUP</div>
+              <div class="text-white/70">60°C Tulip Microfoam</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      import { initTabascoBlackMagicExperience } from "../scripts/experience";
+      initTabascoBlackMagicExperience();
+    </script>
+  </body>
+</html>
