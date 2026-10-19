@@ -375,16 +375,16 @@ function createOriginCinemaCluster(assets: {
     ctx.font = "700 16px monospace";
     ctx.fillText(pipLabel, 668, 839);
 
-    // Live REC / 60FPS indicator in top-left of video viewport
-    ctx.fillStyle = "rgba(8, 11, 18, 0.72)";
-    ctx.fillRect(68, 140, 256, 38);
+    // Live REC / 60FPS indicator in top-right of video viewport
+    ctx.fillStyle = "rgba(8, 11, 18, 0.80)";
+    ctx.fillRect(616, 138, 278, 38);
     ctx.fillStyle = "#F40000";
     ctx.beginPath();
-    ctx.arc(90, 159, 7, 0, Math.PI * 2);
+    ctx.arc(638, 157, 7, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#ffffff";
     ctx.font = "700 18px monospace";
-    ctx.fillText("LIVE 60FPS · MAGIC HAYA", 108, 165);
+    ctx.fillText("LIVE 60FPS · MAGIC HAYA", 656, 163);
 
     ctx.restore();
 
@@ -934,9 +934,6 @@ export function initTabascoBlackMagicExperience() {
     const [floresBagImg, woodenBoardImg, vesperToolsImg, beansPourImg, ...scrubFrames] = loadedImgs;
 
     // ACTOR A: Beats 0–3 Real Video & Scrub Cinema Assembly
-    // Beat 0 (THE ROOT OF BLACK MAGIC): Text on RIGHT -> Cinema Assembly on LEFT (x = -1.68)
-    // Beat 1 (THE STANDARD): Text on LEFT -> Cinema Assembly glides to RIGHT (x = +1.68)
-    // Beat 2 (CUT AT 1:1.5...): Text at BOTTOM-LEFT -> Cinema Assembly zooms in at CENTER-RIGHT (x = +0.72, z = 1.65)
     const originCinema = createOriginCinemaCluster({
       floresBagImg,
       vesperToolsImg,
@@ -947,78 +944,11 @@ export function initTabascoBlackMagicExperience() {
       vidGrind,
       vidRistretto,
     });
-
-    const startX = isMobile ? 0.0 : -1.72;
-    const startY = isMobile ? 1.15 : 0.06;
-    const startScale = isMobile ? 0.56 : 0.82;
-    originCinema.root.position.set(startX, startY, 0.35);
-    originCinema.root.rotation.set(0, isMobile ? 0 : 0.24, 0);
-    originCinema.root.scale.setScalar(startScale);
     scene.add(originCinema.root);
 
-    const originTl = gsap.timeline({ paused: true });
-    originTl
-      // Glide from LEFT (Beat 0) to RIGHT (Beat 1: THE STANDARD)
-      .to(
-        originCinema.root.position,
-        {
-          x: isMobile ? 0.0 : 1.72,
-          y: isMobile ? 1.15 : 0.06,
-          z: 0.35,
-          duration: 0.75,
-          ease: "power2.inOut",
-        },
-        0.48
-      )
-      .to(
-        originCinema.root.rotation,
-        {
-          y: isMobile ? 0 : -0.24,
-          duration: 0.75,
-          ease: "power2.inOut",
-        },
-        0.48
-      )
-      // Glide into close-up for Beat 2 (CUT AT 1:1.5...)
-      .to(
-        originCinema.root.position,
-        {
-          x: isMobile ? 0.0 : 0.75,
-          y: isMobile ? 0.92 : 0.16,
-          z: isMobile ? 1.1 : 1.55,
-          duration: 0.65,
-          ease: "power2.inOut",
-        },
-        1.55
-      )
-      .to(
-        originCinema.root.rotation,
-        {
-          y: isMobile ? 0 : -0.14,
-          duration: 0.65,
-          ease: "power2.inOut",
-        },
-        1.55
-      )
-      // Push through the espresso stream into the crimson transition (t = 2.4 -> 2.8)
-      .to(
-        originCinema.root.position,
-        {
-          x: 0,
-          y: 0.2,
-          z: 4.8,
-          duration: 0.45,
-          ease: "power2.in",
-        },
-        2.35
-      )
-      .set(originCinema.root, { visible: false }, 2.78)
-      .to({}, { duration: 0.1 }, 10.0);
-
-    // ACTOR B: Phase 5 The 92°C Architect Live Video Cylinder (Rolling across "92°C" portal at y = 0.78)
+    // ACTOR B: Phase 5 The 92°C Architect Live Video Cylinder (Rolling across "92°C" portal)
     const barrelOuterGroup = new THREE.Group();
     barrelOuterGroup.visible = false;
-    barrelOuterGroup.position.set(10, 0.78, 0.4);
     scene.add(barrelOuterGroup);
 
     const barrelInnerGroup = new THREE.Group();
@@ -1060,24 +990,6 @@ export function initTabascoBlackMagicExperience() {
     });
     barrelOuterGroup.rotation.set(0.22, 0.42, -0.14);
 
-    const barrelTl = gsap.timeline({ paused: true });
-    barrelTl
-      .set(barrelOuterGroup, { visible: true }, 3.55)
-      .fromTo(
-        barrelOuterGroup.position,
-        { x: 9.2, y: 0.78, z: 0.4 },
-        { x: -11.5, y: 0.78, z: 0.4, duration: 1.5, ease: "none" },
-        3.55
-      )
-      .fromTo(
-        barrelInnerGroup.rotation,
-        { x: 0, y: 0, z: 0 },
-        { x: Math.PI * 5, y: 0, z: 0, duration: 1.5, ease: "none" },
-        3.55
-      )
-      .set(barrelOuterGroup, { visible: false }, 5.05)
-      .to({}, { duration: 0.1 }, 10.0);
-
     // ACTOR C: Phase 6–8 SINGLE Hero Haya 160ml Black Magic Live Video & Ceramic Pedestal Showcase
     const heroShowcase = createHeroBlackMagicShowcase({
       vidTulip,
@@ -1088,47 +1000,7 @@ export function initTabascoBlackMagicExperience() {
     });
     const heroCupGroup = heroShowcase.group;
     heroCupGroup.visible = false;
-    heroCupGroup.position.set(0, 5.2, 0.45);
-    heroCupGroup.scale.setScalar(isMobile ? 0.56 : 0.78);
     scene.add(heroCupGroup);
-
-    const heroCupTl = gsap.timeline({ paused: true });
-    heroCupTl
-      .set(heroCupGroup, { visible: true }, 5.28)
-      .to(
-        heroCupGroup.position,
-        {
-          x: 0,
-          y: isMobile ? -0.82 : -1.25,
-          z: isMobile ? 0.2 : 0.55,
-          duration: 0.85,
-          ease: "power2.out",
-        },
-        5.28
-      )
-      .to(
-        heroCupGroup.position,
-        {
-          x: 0,
-          y: isMobile ? -1.05 : -1.36,
-          z: isMobile ? 0.1 : 0.42,
-          duration: 0.8,
-          ease: "power2.out",
-        },
-        7.25
-      )
-      .to(
-        heroCupGroup.scale,
-        {
-          x: isMobile ? 0.48 : 0.62,
-          y: isMobile ? 0.48 : 0.62,
-          z: isMobile ? 0.48 : 0.62,
-          duration: 0.8,
-          ease: "power2.out",
-        },
-        7.25
-      )
-      .to({}, { duration: 0.1 }, 10.0);
 
     // ACTOR D: Phase 8 The 4 Live-Video Extraction Stage Monoliths in chronological order (01 -> 02 -> 03 -> 04)
     const stage1Mono = createLiveStageMonolith({
@@ -1168,64 +1040,16 @@ export function initTabascoBlackMagicExperience() {
       fallbackImg: scrubFrames[16] || woodenBoardImg,
     });
 
-    const posOuterLeft = { x: isMobile ? -2.35 : -3.95, z: -1.65, endY: -1.25 };
-    const posInnerLeft = { x: isMobile ? -1.28 : -2.18, z: -0.95, endY: -1.16 };
-    const posInnerRight = { x: isMobile ? 1.28 : 2.18, z: -0.95, endY: -1.16 };
-    const posOuterRight = { x: isMobile ? 2.35 : 3.95, z: -1.65, endY: -1.25 };
-    const startYMono = 5.5;
-
     const monoOuterLeft = stage1Mono.mesh;
     const monoInnerLeft = stage2Mono.mesh;
     const monoInnerRight = stage3Mono.mesh;
     const monoOuterRight = stage4Mono.mesh;
 
-    [
-      { mesh: monoOuterLeft, pos: posOuterLeft },
-      { mesh: monoInnerLeft, pos: posInnerLeft },
-      { mesh: monoInnerRight, pos: posInnerRight },
-      { mesh: monoOuterRight, pos: posOuterRight },
-    ].forEach(({ mesh, pos }) => {
+    [monoOuterLeft, monoInnerLeft, monoInnerRight, monoOuterRight].forEach((mesh) => {
       mesh.visible = false;
-      mesh.position.set(pos.x, startYMono, pos.z);
-      mesh.scale.setScalar(isMobile ? 0.55 : 0.86);
       mesh.rotation.set(0.05, 0, 0);
       scene.add(mesh);
     });
-
-    const lineupTl = gsap.timeline({ paused: true });
-    const tInner = 7.3;
-    const tOuter = 7.48;
-
-    lineupTl
-      .set(monoInnerLeft, { visible: true }, tInner)
-      .to(monoInnerLeft.position, { y: posInnerLeft.endY, duration: 0.9, ease: "expo.out" }, tInner)
-      .to(
-        monoInnerLeft.rotation,
-        { y: Math.atan2(0 - posInnerLeft.x, 7 - posInnerLeft.z), duration: 0.9, ease: "expo.out" },
-        tInner
-      )
-      .set(monoInnerRight, { visible: true }, tInner + 0.08)
-      .to(monoInnerRight.position, { y: posInnerRight.endY, duration: 0.9, ease: "expo.out" }, tInner + 0.08)
-      .to(
-        monoInnerRight.rotation,
-        { y: Math.atan2(0 - posInnerRight.x, 7 - posInnerRight.z), duration: 0.9, ease: "expo.out" },
-        tInner + 0.08
-      )
-      .set(monoOuterLeft, { visible: true }, tOuter)
-      .to(monoOuterLeft.position, { y: posOuterLeft.endY, duration: 0.9, ease: "expo.out" }, tOuter)
-      .to(
-        monoOuterLeft.rotation,
-        { y: Math.atan2(0 - posOuterLeft.x, 7 - posOuterLeft.z), duration: 0.9, ease: "expo.out" },
-        tOuter
-      )
-      .set(monoOuterRight, { visible: true }, tOuter + 0.08)
-      .to(monoOuterRight.position, { y: posOuterRight.endY, duration: 0.9, ease: "expo.out" }, tOuter + 0.08)
-      .to(
-        monoOuterRight.rotation,
-        { y: Math.atan2(0 - posOuterRight.x, 7 - posOuterRight.z), duration: 0.9, ease: "expo.out" },
-        tOuter + 0.08
-      )
-      .to({}, { duration: 0.1 }, 10.0);
 
     // 5. Pure Deterministic Stage Background Interpolation (Dark Studio -> Deep Crimson -> Pure White)
     const colDarkInner = new THREE.Color("#2a2a2a");
@@ -1258,7 +1082,7 @@ export function initTabascoBlackMagicExperience() {
       }
     };
 
-    // 6. Pure Deterministic Phase-Sections & Portal Evaluator
+    // 6. Pure Deterministic Phase-Sections, Portal & 3D Actors Evaluator
     const phaseSections = Array.from(document.querySelectorAll<HTMLElement>(".phase-section"));
     const portalTargets = Array.from(
       document.querySelectorAll<HTMLElement>("#html-background-portal .anim-target")
@@ -1271,8 +1095,155 @@ export function initTabascoBlackMagicExperience() {
     });
 
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+    const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
     const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
     const easeInCubic = (x: number) => x * x * x;
+    const easeInOutCubic = (x: number) =>
+      x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    const easeOutExpo = (x: number) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+
+    const update3DActors = (
+      t: number,
+      mobile: boolean,
+      aspect: number,
+      elapsed: number,
+      ptr: { x: number; y: number }
+    ) => {
+      // Responsive camera distance guarantees full horizontal frustum on any mobile aspect ratio
+      camera.position.z = mobile ? Math.max(8.2, 3.78 / Math.max(0.35, aspect)) : 6.2;
+
+      // --- ACTOR A: Origin Cinema Assembly (t < 2.78) ---
+      originCinema.root.visible = t < 2.78;
+      if (originCinema.root.visible) {
+        const satScale = mobile ? 0.84 : 0.96;
+        originCinema.satBag.scale.setScalar(satScale);
+        originCinema.satTools.scale.setScalar(satScale);
+        originCinema.satBag.position.x = mobile ? -1.36 : -1.62;
+        originCinema.satTools.position.x = mobile ? 1.36 : 1.62;
+        originCinema.satBag.position.y = 0.42 + Math.sin(elapsed * 1.5) * 0.05;
+        originCinema.satTools.position.y = -0.78 + Math.cos(elapsed * 1.3) * 0.05;
+
+        const baseScale = mobile ? 0.68 : 0.82;
+        originCinema.root.scale.setScalar(baseScale);
+
+        const x0 = mobile ? -0.05 : -1.72;
+        const y0 = mobile ? 1.18 : 0.06;
+        const z0 = 0.35;
+        const ry0 = mobile ? 0.08 : 0.24;
+
+        const x1 = mobile ? 0.05 : 1.72;
+        const y1 = mobile ? 1.18 : 0.06;
+        const z1 = 0.35;
+        const ry1 = mobile ? -0.08 : -0.24;
+
+        const x2 = mobile ? 0.0 : 0.75;
+        const y2 = mobile ? 0.52 : 0.16;
+        const z2 = mobile ? 1.25 : 1.55;
+        const ry2 = mobile ? 0.0 : -0.14;
+
+        let cx = x0;
+        let cy = y0;
+        let cz = z0;
+        let cry = ry0;
+
+        if (t > 0.48 && t <= 1.55) {
+          const p = easeInOutCubic(clamp01((t - 0.48) / 0.75));
+          cx = lerp(x0, x1, p);
+          cy = lerp(y0, y1, p);
+          cz = lerp(z0, z1, p);
+          cry = lerp(ry0, ry1, p);
+        } else if (t > 1.55 && t <= 2.35) {
+          const p = easeInOutCubic(clamp01((t - 1.55) / 0.65));
+          cx = lerp(x1, x2, p);
+          cy = lerp(y1, y2, p);
+          cz = lerp(z1, z2, p);
+          cry = lerp(ry1, ry2, p);
+        } else if (t > 2.35) {
+          const p = easeInCubic(clamp01((t - 2.35) / 0.43));
+          cx = lerp(x2, 0, p);
+          cy = lerp(y2, 0.2, p);
+          cz = lerp(z2, 5.2, p);
+          cry = lerp(ry2, 0, p);
+        }
+
+        originCinema.root.position.set(cx, cy, cz);
+        originCinema.root.rotation.set(ptr.y * 0.06, cry + ptr.x * 0.08, 0);
+      }
+
+      // --- ACTOR B: Phase 5 Rolling 92°C Architect Drum (3.55 <= t <= 5.05) ---
+      barrelOuterGroup.visible = t >= 3.55 && t <= 5.05;
+      if (barrelOuterGroup.visible) {
+        const pBarrel = clamp01((t - 3.55) / 1.5);
+        const bxStart = mobile ? 4.4 : 9.2;
+        const bxEnd = mobile ? -4.8 : -11.5;
+        const by = mobile ? 0.36 : 0.78;
+        barrelOuterGroup.scale.setScalar(mobile ? 0.68 : 1.0);
+        barrelOuterGroup.position.set(lerp(bxStart, bxEnd, pBarrel), by, 0.4);
+        barrelInnerGroup.rotation.set(Math.PI * 5 * pBarrel, 0, 0);
+      }
+
+      // --- ACTOR C: Phase 7–8 Hero 160ml Black Magic Cup Showcase (t >= 5.78) ---
+      heroCupGroup.visible = t >= 5.78;
+      if (heroCupGroup.visible) {
+        const pIn = easeOutCubic(clamp01((t - 5.78) / 0.55));
+        const pLineup = easeOutCubic(clamp01((t - 7.25) / 0.75));
+
+        const yPhase7 = mobile ? -0.58 : -1.25;
+        const zPhase7 = mobile ? 0.32 : 0.55;
+        const sPhase7 = mobile ? 0.58 : 0.78;
+
+        const yPhase8 = mobile ? -0.46 : -1.36;
+        const zPhase8 = mobile ? 0.38 : 0.42;
+        const sPhase8 = mobile ? 0.46 : 0.62;
+
+        const targetY = lerp(yPhase7, yPhase8, pLineup);
+        const targetZ = lerp(zPhase7, zPhase8, pLineup);
+        const targetS = lerp(sPhase7, sPhase8, pLineup);
+
+        heroCupGroup.position.set(0, lerp(5.2, targetY, pIn), targetZ);
+        heroCupGroup.scale.setScalar(targetS);
+        heroCupGroup.rotation.y = Math.sin(elapsed * 0.55) * 0.14 + ptr.x * 0.22;
+      }
+
+      // --- ACTOR D: Phase 8 4 Live-Video Extraction Stage Monoliths (t >= 7.30) ---
+      // On desktop: 5-monolith horizontal amphitheater arc (-3.95, -2.18, 0, +2.18, +3.95)
+      // On mobile: 2-tier stadium formation around the central Hero Cup so all 4 stages fit 100% inside portrait frustum!
+      const startYMono = 5.5;
+      const monoScale = mobile ? 0.46 : 0.86;
+
+      const specs = mobile
+        ? [
+            // Stage 01 (Upper-Left on Mobile)
+            { mesh: monoOuterLeft, x: -1.04, endY: 0.48, z: -0.95, t0: 7.30 },
+            // Stage 02 (Upper-Right on Mobile)
+            { mesh: monoInnerLeft, x: 1.04, endY: 0.48, z: -0.95, t0: 7.38 },
+            // Stage 03 (Lower-Left on Mobile)
+            { mesh: monoInnerRight, x: -1.18, endY: -0.92, z: -0.65, t0: 7.46 },
+            // Stage 04 (Lower-Right on Mobile)
+            { mesh: monoOuterRight, x: 1.18, endY: -0.92, z: -0.65, t0: 7.54 },
+          ]
+        : [
+            // Stage 01 (Outer-Left on Desktop)
+            { mesh: monoOuterLeft, x: -3.95, endY: -1.25, z: -1.65, t0: 7.48 },
+            // Stage 02 (Inner-Left on Desktop)
+            { mesh: monoInnerLeft, x: -2.18, endY: -1.16, z: -0.95, t0: 7.30 },
+            // Stage 03 (Inner-Right on Desktop)
+            { mesh: monoInnerRight, x: 2.18, endY: -1.16, z: -0.95, t0: 7.38 },
+            // Stage 04 (Outer-Right on Desktop)
+            { mesh: monoOuterRight, x: 3.95, endY: -1.25, z: -1.65, t0: 7.56 },
+          ];
+
+      specs.forEach(({ mesh, x, endY, z, t0 }) => {
+        mesh.visible = t >= t0;
+        if (mesh.visible) {
+          const p = easeOutExpo(clamp01((t - t0) / 0.85));
+          mesh.scale.setScalar(monoScale);
+          mesh.position.set(x, lerp(startYMono, endY, p), z);
+          const targetRotY = Math.atan2(0 - x, 7 - z);
+          mesh.rotation.set(0.05, targetRotY * p, 0);
+        }
+      });
+    };
 
     const applyTargetTransform = (
       el: HTMLElement,
@@ -1402,7 +1373,6 @@ export function initTabascoBlackMagicExperience() {
     };
 
     // 7. Master ScrollTrigger (1:1 linear mapping from top to bottom of #scroll-spacer)
-    ScrollTrigger.config({ ignoreMobileResize: true });
     const masterScrollTl = gsap.timeline({
       scrollTrigger: {
         trigger: spacerEl || "body",
@@ -1482,11 +1452,13 @@ export function initTabascoBlackMagicExperience() {
     gsap.ticker.add(() => {
       const elapsed = clock.getElapsedTime();
       const t = state.progress * state.totalSections;
+      const mobileNow = window.innerWidth < 768;
+      const aspectNow = window.innerWidth / Math.max(1, window.innerHeight);
 
-      originTl.time(t);
-      barrelTl.time(t);
-      heroCupTl.time(t);
-      lineupTl.time(t);
+      pointer.x += (pointer.targetX - pointer.x) * 0.08;
+      pointer.y += (pointer.targetY - pointer.y) * 0.08;
+
+      update3DActors(t, mobileNow, aspectNow, elapsed, pointer);
       updateStageBackground(t);
       updatePhaseSections(t);
 
@@ -1513,20 +1485,6 @@ export function initTabascoBlackMagicExperience() {
       backSpotLight.intensity = 110 * (1 - dip * 0.9);
       fillDirLight.intensity = (t >= 5.0 ? 3.6 : 2.8) * (1 - dip * 0.85);
       contactShadowPlane.visible = t >= 5.0;
-
-      // Subtle continuous idle floating motion & pointer parallax on active 3D cinema assemblies
-      pointer.x += (pointer.targetX - pointer.x) * 0.08;
-      pointer.y += (pointer.targetY - pointer.y) * 0.08;
-
-      if (originCinema.root.visible) {
-        originCinema.satBag.position.y = 0.88 + Math.sin(elapsed * 1.5) * 0.06;
-        originCinema.satTools.position.y = -0.88 + Math.cos(elapsed * 1.3) * 0.06;
-        originCinema.root.rotation.x = pointer.y * 0.06;
-      }
-
-      if (heroCupGroup.visible && t >= 5.8) {
-        heroCupGroup.rotation.y = Math.sin(elapsed * 0.55) * 0.14 + pointer.x * 0.22;
-      }
 
       // HUD Logo & Credit Inversion
       if (logoEl) {
@@ -1567,11 +1525,23 @@ export function initTabascoBlackMagicExperience() {
       renderer.render(scene, camera);
     });
 
-    // Responsive Resize Handler
+    // Responsive Resize Handler (dynamically updates spacer height, camera aspect & ScrollTrigger while preserving beat progress)
+    let lastMobile = window.innerWidth < 768;
     window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const savedProgress = state.progress;
+      const nowMobile = window.innerWidth < 768;
+      if (spacerEl && nowMobile !== lastMobile) {
+        lastMobile = nowMobile;
+        spacerEl.style.height = `${state.totalSections * (nowMobile ? 60 : 80)}vh`;
+      }
+      camera.aspect = window.innerWidth / Math.max(1, window.innerHeight);
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
+      ScrollTrigger.refresh();
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo(0, savedProgress * maxScroll);
+      state.progress = savedProgress;
     });
   });
 
