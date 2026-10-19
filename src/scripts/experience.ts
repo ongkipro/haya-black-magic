@@ -1265,7 +1265,10 @@ export function initTabascoBlackMagicExperience() {
         const inv = 1 - e;
         const offsetPx = mobile ? window.innerWidth * 0.55 : window.innerWidth * 0.32;
 
-        if (variant === "architect" && el.tagName.toLowerCase() === "h1") {
+        if (
+          variant === "architect" &&
+          (el.tagName.toLowerCase() === "h1" || el.dataset.portalZoom === "true")
+        ) {
           const sc = 1 + inv * 2.8;
           el.style.opacity = e.toFixed(3);
           el.style.filter = `blur(${(inv * 24).toFixed(1)}px)`;

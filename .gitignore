@@ -21,3 +21,5 @@ pnpm-debug.log*
 # local visual verification artifacts
 screenshots/
 design/review-slices/
+.vercel
+.env*

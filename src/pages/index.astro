@@ -1,9 +1,77 @@
 ---
 import "../styles/global.css";
 
-const pageTitle = "Black Magic Coffee - Haya Espresso Bar Signature di Malang";
+const pageTitle = "Black Magic Coffee - Signature 160ml Ristretto Cup at Haya Malang";
 const pageDescription =
-  "Experience Black Magic at Haya Espresso Bar Sawojajar Malang: a 92°C 1:1.5 double ristretto folded into 60°C silky microfoam in a 160ml ceramic cup.";
+  "Black Magic Coffee at Haya Espresso Bar Sawojajar, Malang pairs a 36g 92°C Flores Bajawa double ristretto with 60°C silky microfoam in a 160ml navy cup.";
+const canonicalUrl = "https://haya-black-magic.vercel.app/";
+const ogImageUrl = "https://haya-black-magic.vercel.app/images/magic-real.webp";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CafeOrCoffeeShop",
+      "@id": "https://haya-black-magic.vercel.app/#cafe",
+      name: "Haya Espresso Bar",
+      url: canonicalUrl,
+      image: ogImageUrl,
+      telephone: "+6289508136545",
+      priceRange: "IDR 25.000 - IDR 45.000",
+      servesCuisine: ["Specialty Coffee", "Espresso", "Ristretto Milk Coffee"],
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Jl. Danau Maninjau Raya No.89, Sawojajar",
+        addressLocality: "Malang",
+        addressRegion: "Jawa Timur",
+        postalCode: "65139",
+        addressCountry: "ID",
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ],
+          opens: "08:00",
+          closes: "22:00",
+        },
+      ],
+    },
+    {
+      "@type": "Product",
+      "@id": "https://haya-black-magic.vercel.app/#black-magic-coffee",
+      name: "Black Magic Coffee",
+      brand: {
+        "@type": "Brand",
+        name: "Haya Espresso Bar",
+      },
+      description: pageDescription,
+      image: [
+        ogImageUrl,
+        "https://haya-black-magic.vercel.app/images/real/finished-black-magic-cup.webp",
+      ],
+      category: "Specialty Espresso Beverage",
+      offers: {
+        "@type": "Offer",
+        url: canonicalUrl,
+        priceCurrency: "IDR",
+        price: "45000",
+        availability: "https://schema.org/LimitedAvailability",
+        itemCondition: "https://schema.org/NewCondition",
+        seller: {
+          "@id": "https://haya-black-magic.vercel.app/#cafe",
+        },
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -13,13 +81,41 @@ const pageDescription =
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-    <link rel="canonical" href="https://hayaespressobar.com/black-magic" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Haya Espresso Bar" />
+    <meta name="publisher" content="Haya Espresso Bar" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/webp" href="/images/haya-monogram.webp" />
 
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/images/magic-real.webp" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="Haya Espresso Bar" />
+    <meta property="og:locale" content="en_ID" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1536" />
+    <meta
+      property="og:image:alt"
+      content="160ml Black Magic Coffee in a midnight-navy ceramic cup at Haya Espresso Bar Malang"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta
+      name="twitter:image:alt"
+      content="160ml Black Magic Coffee in a midnight-navy ceramic cup at Haya Espresso Bar Malang"
+    />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -55,18 +151,19 @@ const pageDescription =
           <div
             class="relative text-white flex flex-col items-center justify-center w-full h-full max-w-5xl mx-auto"
           >
-            <h2
+            <p
               class="font-baton text-[clamp(20px,6.5vw,48px)] md:text-[clamp(24px,3.5vw,48px)] leading-[1] uppercase font-black tracking-tighter m-0 mb-2 md:mb-3 text-center"
               style="visibility: hidden;"
             >
               THE ARCHITECT OF FLAVOR:
-            </h2>
-            <h1
+            </p>
+            <h2
+              data-portal-zoom="true"
               class="anim-target font-baton text-[clamp(76px,28vw,250px)] md:text-[clamp(100px,20vw,250px)] leading-[0.82] uppercase font-black tracking-wide m-0 text-center mb-5 md:mb-10 text-white drop-shadow-[0_0_80px_rgba(150,0,0,0.8)]"
               style="opacity: 0;"
             >
               92°C
-            </h1>
+            </h2>
             <div
               class="flex flex-col items-center w-full max-w-[92%] md:max-w-2xl"
               style="visibility: hidden;"
@@ -75,10 +172,9 @@ const pageDescription =
               <p
                 class="font-overpass text-[0.92rem] md:text-[1.25rem] leading-relaxed text-center font-light text-white/85"
               >
-                While most cappuccinos push past 28 seconds into harsh bitterness, Black Magic
-                locks our Hambach PID at <strong class="font-black text-white">92°C and 1:1.5</strong>.
-                Stopping the extraction at exactly 36 grams preserves roasted hazelnut and dark
-                chocolate sweetness.
+                Push an espresso past 28 seconds and roasted hazelnut turns to dry ash. Black Magic
+                locks our Hambach multi-boiler PID at <strong class="font-black text-white">92°C and a strict 1:1.5 ratio</strong>—stopping
+                the stream at 36 grams to trap pure dark-cocoa viscosity and caramelized sweetness.
               </p>
             </div>
           </div>
@@ -94,11 +190,12 @@ const pageDescription =
         class="fixed inset-0 z-[50] flex items-center justify-center overflow-hidden"
         style="background: radial-gradient(circle at center, #2a0808 0%, #0a0a0a 100%);"
       >
-        <h1
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-bold text-white opacity-[0.02] pointer-events-none select-none m-0 leading-none whitespace-nowrap"
+        <div
+          aria-hidden="true"
+          class="font-baton absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18vw] font-bold text-white opacity-[0.02] pointer-events-none select-none m-0 leading-none whitespace-nowrap"
         >
           BLACK MAGIC
-        </h1>
+        </div>
         <div class="relative z-10 w-[350px] max-w-full px-6 sm:px-0">
           <div class="flex justify-between items-end mb-3">
             <span
@@ -131,7 +228,7 @@ const pageDescription =
       >
         <img
           src="/images/haya-monogram.webp"
-          alt="Haya Espresso Bar monogram emblem"
+          alt="Haya Espresso Bar monogram emblem for Black Magic Coffee in Malang"
           width="36"
           height="36"
           class="w-7 h-7 md:w-10 md:h-10 rounded-full object-cover bg-[#10203b] border border-current/25 shadow-sm"
@@ -163,12 +260,12 @@ const pageDescription =
         rel="noopener noreferrer"
         class="fixed bottom-[max(0.65rem,env(safe-area-inset-bottom))] max-md:inset-x-0 max-md:text-center md:right-[max(1.25rem,env(safe-area-inset-right))] z-[100] font-overpass text-[0.6rem] md:text-xs tracking-wide text-white mix-blend-difference opacity-70 hover:opacity-100 transition-opacity pointer-events-auto"
       >
-        Crafted slowly at <span class="font-semibold">Haya Espresso Bar · Sawojajar, Malang</span>
+        Brewed daily 08:00–22:00 at <span class="font-semibold">Haya Espresso Bar · Sawojajar, Malang</span>
       </a>
 
       <!-- 9 Overlapping Phase Sections (Exact u2 array from tabasco_pretty.js) -->
       <div class="fixed inset-0 h-[100dvh] w-full">
-        <!-- PHASE 0: origin (variant: custom-origin, endTime: 0.1) -->
+        <!-- PHASE 0: origin (variant: custom-origin, endTime: 0.1) — SOLE H1 ON PAGE -->
         <section
           class="phase-section absolute inset-0 w-full h-full flex flex-col p-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(2.4rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] md:p-20 justify-center items-end text-left max-md:justify-end max-md:items-center max-md:pb-[4.2vh] max-md:px-[4vw]"
           style="opacity: 1; visibility: visible;"
@@ -190,19 +287,19 @@ const pageDescription =
                 </span>
               </div>
             </h1>
-            <h2
-              class="anim-target font-overpass text-[1.02rem] md:text-4xl font-normal mb-2.5 md:mb-6 text-center md:text-left"
+            <p
+              class="anim-target font-overpass text-[1.02rem] md:text-3xl font-normal mb-2.5 md:mb-6 text-center md:text-left"
             >
-              Sweetness begins in calibration
-            </h2>
+              Dark chocolate crema. Silky 60°C milk. Zero added sugar.
+            </p>
             <div class="anim-target w-20 md:w-56 h-[2px] bg-white mb-3 md:mb-8 opacity-80"></div>
             <p
               class="anim-target font-overpass text-[0.8rem] sm:text-[0.88rem] md:text-xl leading-[1.52] md:leading-relaxed font-light opacity-90 text-center md:text-left max-w-[92vw] md:max-w-none"
             >
-              At Haya Espresso Bar in Sawojajar, Malang, we saw potential where others added sugar.
-              By pairing a 92°C double ristretto with 60°C freeze-distilled milk inside a 160ml
-              navy ceramic cup, we weren't just making a cappuccino; we were designing our daily
-              signature. This is the story of how one cup became Haya's standard of excellence.
+              Most milk coffees drown bitter, over-extracted espresso under syrup or steamed foam.
+              At Haya Espresso Bar in Sawojajar, Malang, we cut our 18g Flores Bajawa shot early at
+              92°C and fold that 36g double ristretto heart into 60°C velvet microfoam inside a
+              preheated 160ml midnight-navy ceramic cup.
             </p>
           </div>
         </section>
@@ -215,7 +312,7 @@ const pageDescription =
           <div
             class="relative z-20 max-w-lg lg:max-w-xl text-white mix-blend-difference flex flex-col items-center md:items-start mt-6 md:mt-0 pt-0 w-full md:w-auto text-center md:text-left"
           >
-            <h1
+            <h2
               class="font-baton text-[clamp(32px,9.5vw,80px)] md:text-[clamp(40px,6.5vw,80px)] leading-[0.9] uppercase font-black tracking-tighter m-0 flex flex-col items-center md:items-start mb-2.5 md:mb-8 text-center md:text-left"
             >
               <span class="anim-target block">THE</span>
@@ -223,15 +320,15 @@ const pageDescription =
                 <span class="block pr-1">STAND</span>
                 <span class="block bg-[#F40000] px-2 md:px-3 pt-1 pb-0">ARD</span>
               </div>
-            </h1>
+            </h2>
             <div class="anim-target w-20 md:w-56 h-[2px] bg-white mb-3 md:mb-8 opacity-80"></div>
             <p
               class="anim-target font-overpass text-[0.82rem] sm:text-[0.88rem] md:text-xl leading-[1.52] md:leading-relaxed font-light opacity-90 text-center md:text-left max-w-[92vw] md:max-w-none"
             >
-              This is where integrity is measured. Every morning at Haya, extraction is a ritual of
-              precision, not a race. High-altitude Flores Bajawa Arabica (1,200–1,800 MASL) is
-              dosed to 18.0 grams in 2.45 seconds on our Maquinos grinder and leveled with a Vesper
-              distributor. We don't just brew; we calibrate.
+              Great sweetness starts before water ever touches the puck. Every morning at 08:00 WIB,
+              high-altitude Flores Bajawa Arabica (1,200–1,800 MASL) is dosed to 18.0 grams in 2.45
+              seconds on our Maquinos grinder and needle-distributed with a Vesper WDT
+              tool—eliminating channeling so every drop extracts dense, syrupy crema.
             </p>
           </div>
         </section>
@@ -249,11 +346,11 @@ const pageDescription =
             >
               92°C HAMBACH PID · 36G DOUBLE RISTRETTO HEART
             </span>
-            <h1
+            <h2
               class="anim-target font-baton text-[clamp(36px,11vw,100px)] md:text-[clamp(50px,8vw,100px)] leading-[0.9] uppercase font-black tracking-tighter m-0 md:whitespace-nowrap"
             >
               CUT AT 1:1.5...
-            </h1>
+            </h2>
           </div>
         </section>
 
@@ -270,7 +367,7 @@ const pageDescription =
           style="opacity: 0; visibility: hidden;"
         >
           <div class="relative z-20 text-white flex flex-col items-center justify-center w-full h-full">
-            <h1
+            <h2
               class="anim-target font-baton text-[clamp(36px,12vw,80px)] md:text-[clamp(40px,6.5vw,80px)] leading-[0.9] uppercase font-black tracking-tighter m-0 flex flex-col md:flex-row items-center mb-6 md:mb-8 text-center"
             >
               <span
@@ -279,16 +376,16 @@ const pageDescription =
                 THREE
               </span>
               <span>ELEMENTS</span>
-            </h1>
+            </h2>
             <p
               class="anim-target font-overpass text-lg sm:text-xl md:text-3xl leading-relaxed font-normal mb-6 md:mb-16 text-center opacity-95 max-w-[90vw]"
             >
-              18g Flores Bajawa + 92°C Double Ristretto + 60°C Silky Microfoam
+              18g Flores Bajawa + 36g 92°C Ristretto Heart + 130ml 60°C Silky Microfoam
             </p>
             <p
               class="anim-target font-overpass text-sm sm:text-base md:text-xl leading-relaxed opacity-65 text-center font-light whitespace-pre-line tracking-wide mt-2 md:mt-8"
             >
-              {"Because, if you have the essence,\nyou don't need the sugar"}
+              {"When the ristretto heart is naturally sweet,\nyou never need a grain of sugar."}
             </p>
           </div>
         </section>
@@ -301,26 +398,26 @@ const pageDescription =
           <div
             class="relative z-50 text-white flex flex-col items-center justify-center w-full h-full max-w-5xl mx-auto"
           >
-            <h2
+            <p
               class="anim-target font-baton text-[clamp(20px,6.5vw,48px)] md:text-[clamp(24px,3.5vw,48px)] leading-[1] uppercase font-black tracking-tighter m-0 mb-2 md:mb-3 text-center"
             >
               THE ARCHITECT OF FLAVOR:
-            </h2>
-            <h1
+            </p>
+            <h2
+              data-portal-zoom="true"
               class="anim-target font-baton text-[clamp(76px,28vw,250px)] md:text-[clamp(100px,20vw,250px)] leading-[0.82] uppercase font-black tracking-wide m-0 text-center mb-5 md:mb-10"
               style="-webkit-text-stroke: 2.5px white; color: transparent;"
             >
               92°C
-            </h1>
+            </h2>
             <div class="anim-target flex flex-col items-center w-full max-w-[92%] md:max-w-2xl">
               <div class="w-20 md:w-32 h-[1px] bg-white/40 mb-5 md:mb-8"></div>
               <p
                 class="font-overpass text-[0.92rem] md:text-[1.25rem] leading-relaxed text-center font-light text-white/85"
               >
-                While most cappuccinos push past 28 seconds into harsh bitterness, Black Magic
-                locks our Hambach PID at <strong class="font-black text-white">92°C and 1:1.5</strong>.
-                Stopping the extraction at exactly 36 grams preserves roasted hazelnut and dark
-                chocolate sweetness.
+                Push an espresso past 28 seconds and roasted hazelnut turns to dry ash. Black Magic
+                locks our Hambach multi-boiler PID at <strong class="font-black text-white">92°C and a strict 1:1.5 ratio</strong>—stopping
+                the stream at 36 grams to trap pure dark-cocoa viscosity and caramelized sweetness.
               </p>
             </div>
           </div>
@@ -334,16 +431,16 @@ const pageDescription =
           <div
             class="relative z-20 text-black flex flex-col items-center justify-center w-full h-full max-w-xl mx-auto"
           >
-            <h2
+            <p
               class="anim-target font-overpass text-2xl md:text-4xl leading-relaxed mb-2 font-medium text-center"
             >
-              And finally...
-            </h2>
-            <h1
+              Folded into 60°C velvet microfoam...
+            </p>
+            <h2
               class="anim-target font-overpass text-3xl md:text-5xl leading-tight font-medium text-center"
             >
               Calibration becomes Black Magic
-            </h1>
+            </h2>
           </div>
         </section>
 
@@ -359,17 +456,17 @@ const pageDescription =
             <div
               class="flex-none sm:flex-1 flex flex-col items-center sm:items-start text-center sm:text-left mt-7 sm:mt-0 sm:max-w-[26vw]"
             >
-              <h1
+              <h2
                 class="anim-target font-baton text-[clamp(32px,9.5vw,100px)] sm:text-[clamp(40px,6.5vw,92px)] md:text-[clamp(46px,7vw,94px)] leading-[0.92] uppercase font-black tracking-tighter m-0 mb-2 sm:mb-6 w-full"
               >
                 ONE <span class="inline-block bg-[#F40000] text-white px-2.5 pt-0.5 pb-0">CUP</span><br />STARTED IT...
-              </h1>
-              <div class="anim-target w-20 sm:w-44 h-1 sm:h-3 bg-[#F40000] mb-1.5 sm:mb-6"></div>
-              <h2
-                class="anim-target font-overpass text-[1rem] sm:text-[1.4rem] md:text-[1.85rem] leading-snug font-medium sm:font-normal text-[#1a1a1a] max-w-[22ch] sm:max-w-[16ch]"
-              >
-                A sweeter way to meet coffee at Haya
               </h2>
+              <div class="anim-target w-20 sm:w-44 h-1 sm:h-3 bg-[#F40000] mb-1.5 sm:mb-6"></div>
+              <p
+                class="anim-target font-overpass text-[1rem] sm:text-[1.35rem] md:text-[1.75rem] leading-snug font-medium sm:font-normal text-[#1a1a1a] max-w-[24ch] sm:max-w-[18ch]"
+              >
+                Thick as melted dark chocolate. Naturally sweet to the last sip.
+              </p>
             </div>
 
             <!-- Center Column (Open Space for the 3D 160ml Black Magic Cup) -->
@@ -384,7 +481,7 @@ const pageDescription =
                 class="anim-target font-overpass text-sm sm:text-base md:text-xl leading-relaxed font-normal text-[#1a1a1a] whitespace-pre-line tracking-wide border-l-2 border-[#F40000] pl-3.5 md:pl-6 max-sm:bg-white/92 max-sm:backdrop-blur-md max-sm:py-2 max-sm:pr-3 max-sm:rounded-r-lg max-sm:shadow-sm max-sm:text-[11.5px] max-sm:leading-[1.35] max-h-[34vh] sm:max-h-[60vh] md:max-h-none overflow-y-auto md:overflow-visible overscroll-contain pointer-events-auto"
               >
                 {
-                  "The cup that defines Haya Espresso Bar. A concentrated 1:1.5 double ristretto (36g yield from 18g Flores Bajawa) folded into 130ml of 60°C silky microfoam inside our preheated 160ml midnight-navy ceramic cup.\n\nToday we brew a limited number — each peg on our wooden board is a cup. From the first calibration at 08:00 WIB to the last evening pour at Jl. Danau Maninjau Raya No.89, Sawojajar, Black Magic delivers dense chocolate crema and natural lactose sweetness with zero added sugar."
+                  "First sip: warm, glossy 60°C microfoam gives way to a syrupy 36g Flores Bajawa ristretto—tasting of roasted hazelnut, dark cacao, and caramelized milk sugars inside our heavy 160ml midnight-navy ceramic cup.\n\nWe only pull a set number of Black Magic cups each day at Jl. Danau Maninjau Raya No.89, Sawojajar. Every wooden peg on our bar counter represents one cup remaining between 08:00 and 22:00 WIB. Once the last peg comes off the board, Black Magic rests until tomorrow's morning calibration."
                 }
               </div>
             </div>
@@ -403,13 +500,13 @@ const pageDescription =
               <p
                 class="anim-target font-overpass text-[0.55rem] md:text-[0.75rem] uppercase tracking-[0.28em] md:tracking-[0.35em] text-black/55 font-medium text-center w-full mb-1.5 md:mb-3"
               >
-                18g Flores Bajawa · 92°C Double Ristretto · 160ml Navy Ceramic
+                18g Flores Bajawa · 36g 92°C Ristretto · 160ml Navy Ceramic
               </p>
-              <h1
+              <h2
                 class="anim-target font-baton text-[clamp(30px,9.2vw,85px)] md:text-[clamp(45px,7vw,85px)] leading-[0.86] uppercase font-black tracking-tighter m-0 text-center w-full"
               >
                 FOUR STAGES OF PRECISION
-              </h1>
+              </h2>
             </div>
 
             <!-- Center 3D Lineup Space + Interactive Visit & Video Strip -->
@@ -438,21 +535,36 @@ const pageDescription =
                   Sawojajar, Malang (08:00–22:00)
                 </a>
                 <a
-                  href="https://wa.me/6289508136545?text=Halo%20Haya%20Espresso%20Bar%2C%20saya%20ingin%20tanya%20ketersediaan%20Black%20Magic%20hari%20ini."
+                  href="https://wa.me/6289508136545?text=Halo%20Haya%20Espresso%20Bar%2C%20apakah%20kuota%20Black%20Magic%20hari%20ini%20masih%20tersedia%3F"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="font-overpass text-[11px] md:text-sm font-medium text-black/80 hover:text-black px-2.5 py-0.5 md:px-3 md:py-1 rounded-full border border-black/20 transition-colors"
+                  class="inline-flex items-center gap-1.5 font-overpass text-[11px] md:text-sm font-medium text-black/80 hover:text-black px-2.5 py-0.5 md:px-3 md:py-1 rounded-full border border-black/20 transition-colors"
                 >
-                  Ask Barista · 0895-0813-6545
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    class="shrink-0 opacity-75"
+                  >
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                  </svg>
+                  <span>Check Today's Pegs · 0895-0813-6545</span>
                 </a>
               </div>
             </div>
 
-            <h1
+            <h2
               class="anim-target font-baton text-[clamp(32px,10.2vw,100px)] md:text-[clamp(50px,8vw,100px)] leading-[0.88] uppercase font-black tracking-tighter m-0 text-center w-full whitespace-nowrap mb-2 md:-mb-10"
             >
               MEET <span class="inline-block whitespace-nowrap bg-[#F40000] text-white px-2.5 md:px-3 pt-1 pb-0.5">BLACK MAGIC</span>
-            </h1>
+            </h2>
           </div>
         </section>
       </div>
@@ -511,7 +623,7 @@ const pageDescription =
           >
             <img
               src="/images/frames/frame-08.webp"
-              alt="Maquinos grinder set to 2.4 seconds for 18g Black Magic dose"
+              alt="Maquinos grinder dosing 18g Flores Bajawa beans in 2.45s for Black Magic Coffee"
               width="64"
               height="36"
               class="w-12 sm:w-14 h-8 sm:h-9 object-cover rounded border border-white/15 shrink-0"
@@ -528,7 +640,7 @@ const pageDescription =
           >
             <img
               src="/images/frames/frame-10.webp"
-              alt="Hambach espresso machine grouphead locked at 92 degrees Celsius"
+              alt="Hambach multi-boiler espresso machine locked at 92°C for Black Magic Coffee"
               width="64"
               height="36"
               class="w-12 sm:w-14 h-8 sm:h-9 object-cover rounded border border-white/15 shrink-0"
@@ -545,7 +657,7 @@ const pageDescription =
           >
             <img
               src="/images/frames/frame-12.webp"
-              alt="Double ristretto streams pouring into navy ceramic cup"
+              alt="36g double ristretto heart pouring at 1:1.5 ratio for Black Magic Coffee"
               width="64"
               height="36"
               class="w-12 sm:w-14 h-8 sm:h-9 object-cover rounded border border-white/15 shrink-0"
@@ -561,8 +673,8 @@ const pageDescription =
             class="flex items-center gap-2 text-left p-1.5 rounded hover:bg-white/5 transition-colors cursor-pointer"
           >
             <img
-              src="/images/real/finished-black-magic-cup.jpg"
-              alt="Finished 160ml Black Magic cup with tulip latte art on navy saucer"
+              src="/images/real/finished-black-magic-cup.webp"
+              alt="Finished 160ml Black Magic Coffee with 60°C tulip microfoam in navy ceramic cup"
               width="64"
               height="36"
               class="w-12 sm:w-14 h-8 sm:h-9 object-cover rounded border border-white/15 shrink-0"

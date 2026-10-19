@@ -32,15 +32,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-.font-baton {
-  font-family: "Halagar", "Antonio", serif;
-  font-weight: 800;
-}
-
 h2 {
   font-family: "League Spartan", "Overpass", sans-serif;
   font-weight: 400;
+}
+
+h1,
+h2.font-baton,
+.font-baton {
+  font-family: "Halagar", "Antonio", serif;
+  font-weight: 800;
 }
 
 p,
