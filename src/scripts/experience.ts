@@ -1491,16 +1491,7 @@ export function initTabascoBlackMagicExperience() {
 
       // HUD Logo & Credit Inversion
       if (logoEl) {
-        if (t >= 2.65 && t < 5.0) {
-          logoEl.style.color = "#ffffff";
-          logoEl.style.mixBlendMode = "normal";
-        } else if (t >= 5.0) {
-          logoEl.style.color = "#111111";
-          logoEl.style.mixBlendMode = "normal";
-        } else {
-          logoEl.style.color = "#ffffff";
-          logoEl.style.mixBlendMode = "difference";
-        }
+        logoEl.dataset.stageLight = t >= 5.0 ? "true" : "false";
       }
 
       if (creditEl) {

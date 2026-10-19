@@ -120,7 +120,7 @@ const structuredData = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Antonio:wght@400..700&family=League+Spartan:wght@300..900&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Antonio:wght@400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=League+Spartan:wght@300..900&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -220,26 +220,27 @@ const structuredData = {
 
     <!-- 3. Fixed Scrollytelling Overlay Stage (Matches SJ in tabasco_pretty.js) -->
     <main class="fixed inset-0 z-30 w-full h-full pointer-events-none select-none">
-      <!-- Top-Left Fixed Brand Wordmark (Inverts automatically with background phase) -->
-      <a
+      <!-- Top-Left Fixed Brand Wordmark -->
+      <div
         id="hud-logo"
-        href="#top"
-        class="fixed top-[max(1rem,env(safe-area-inset-top))] left-[max(1rem,env(safe-area-inset-left))] md:top-14 md:left-14 z-[100] pointer-events-auto flex items-center gap-2.5 md:gap-3 text-white mix-blend-difference transition-colors duration-700 ease-in-out no-underline"
+        class="fixed top-[max(1.25rem,env(safe-area-inset-top))] left-[max(1.25rem,env(safe-area-inset-left))] md:top-14 md:left-14 z-[100] pointer-events-auto"
       >
-        <img
-          src="/images/haya-monogram.webp"
-          alt="Haya Espresso Bar monogram emblem for Black Magic Coffee in Malang"
-          width="36"
-          height="36"
-          class="w-7 h-7 md:w-10 md:h-10 rounded-full object-cover bg-[#10203b] border border-current/25 shadow-sm"
-        />
-        <div class="flex flex-col leading-none">
-          <span class="font-baton text-lg md:text-2xl tracking-[0.16em] uppercase">HAYA</span>
-          <span class="font-overpass text-[0.52rem] md:text-[0.68rem] tracking-[0.22em] uppercase opacity-75">
-            BLACK MAGIC · 160ML
-          </span>
-        </div>
-      </a>
+        <a href="/" class="group flex items-center gap-3">
+          <img
+            src="/images/haya-monogram.webp"
+            alt="Haya Monogram"
+            class="h-7 w-auto object-contain filter drop-shadow group-hover:scale-105 transition-transform"
+          />
+          <div class="flex flex-col">
+            <span class="font-serif-editorial text-lg tracking-[0.18em] font-medium text-[#faf6f0] leading-none group-hover:text-[#d52410] transition-colors">
+              Haya
+            </span>
+            <span class="text-[9px] tracking-[0.25em] text-[#8a7771] uppercase font-mono mt-0.5">
+              Espresso
+            </span>
+          </div>
+        </a>
+      </div>
 
       <!-- Top-Right Fixed Action: Watch Real 25s Extraction Film from Google Drive -->
       <button
