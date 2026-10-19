@@ -1,0 +1,7 @@
+node_modules
+node_modules/
+.git
+.astro
+dist
+screenshots
+design/review-slices
